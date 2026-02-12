@@ -1,18 +1,16 @@
 import React, { useState, useRef, useEffect } from 'react';
 
+const YOUTUBE_VIDEO_ID = 'W2IcsBCi1to';
+
 export const ComingSoonPage: React.FC = () => {
     const [showVideo, setShowVideo] = useState(false);
     const [isClosing, setIsClosing] = useState(false);
     const [isFullScreen, setIsFullScreen] = useState(false);
-    const videoRef = useRef<HTMLVideoElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
 
     const handlePlayVideo = () => {
         setIsClosing(false);
         setShowVideo(true);
-        requestAnimationFrame(() => {
-            videoRef.current?.play();
-        });
     };
 
     const handleCloseVideo = () => {
@@ -20,10 +18,6 @@ export const ComingSoonPage: React.FC = () => {
         setTimeout(() => {
             setShowVideo(false);
             setIsClosing(false);
-            if (videoRef.current) {
-                videoRef.current.pause();
-                videoRef.current.currentTime = 0;
-            }
         }, 500);
     };
 
@@ -65,23 +59,25 @@ export const ComingSoonPage: React.FC = () => {
                 </div>
             )}
 
-            {/* Video Layer - Fills entire container */}
+            {/* YouTube Video Layer */}
             {showVideo && (
                 <div
                     className={`absolute inset-0 z-30 flex items-center justify-center group/video ${isClosing ? 'animate-fade-out' : ''
                         }`}
                 >
-                    <video
-                        ref={videoRef}
-                        className={`transition-all duration-500 ${isFullScreen
-                                ? 'absolute inset-0 w-full h-full object-cover md:object-contain'
-                                : 'w-full h-full object-cover md:object-contain md:w-[70%] md:h-[70%] md:rounded-lg'
-                            }`}
-                        src="/man$a - you might not get it.mov"
-                        onEnded={handleCloseVideo}
-                        preload="auto"
-                        playsInline
-                    />
+                    <div className={`transition-all duration-500 ${isFullScreen
+                            ? 'w-full h-full'
+                            : 'w-full h-full md:w-[70%] md:h-[70%] md:rounded-lg md:overflow-hidden'
+                        }`}>
+                        <iframe
+                            className="w-full h-full"
+                            src={`https://www.youtube.com/embed/${YOUTUBE_VIDEO_ID}?autoplay=1&rel=0&modestbranding=1&playsinline=1`}
+                            title="₥AN$A - you might not get this"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+                            allowFullScreen
+                            style={{ border: 'none' }}
+                        />
+                    </div>
 
                     {/* Bottom-Center Controls - Appear on hover */}
                     <div className="absolute bottom-24 md:bottom-10 left-1/2 -translate-x-1/2 flex gap-6 md:gap-8 items-center opacity-0 group-hover/video:opacity-100 transition-opacity duration-500 z-50">
